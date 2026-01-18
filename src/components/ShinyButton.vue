@@ -2,7 +2,7 @@
   <div class="btn-wrapper">
     <button class="spin-btn" @click="emit('click')">
       <div class="btn-content">
-        <span class="btn-text">КРУТИТЬ</span>
+        <span class="btn-text">Крутить</span>
         <div class="shine"></div>
       </div>
     </button>
@@ -39,7 +39,8 @@ const emit = defineEmits(['click'])
 
 .btn-content {
   position: relative;
-  background: linear-gradient(180deg, #d946ef 0%, #a815cf 100%);
+  /* background: linear-gradient(180deg, #9c52cc 0%, #8840bc 100%); */
+  background: linear-gradient(180deg, #9c52cc 0%, #8840bc 100%);
   border-radius: 100px;
   padding: 0 60px;
   
@@ -105,6 +106,6 @@ const emit = defineEmits(['click'])
 
 .spin-btn:hover .shine {
   left: 150%;
-  transition: 0.8s ease-in-out;
+  transition: 1.4s ease-in-out;
 }
 </style>
