@@ -36,26 +36,35 @@ const spin = () => {
 };
 
 
-const fontSize_big = "text-[38px] ";
+const fontSize_big = "32px";
 const fontSize = "text-[32px] ";
-const fontSize_small = "text-[26px] ";
+const fontSize_small = "text-[16px] ";
 const segments = [
   { text: "МЕРЧ", type: "#premium-gold", textColor: "#e99d0c", style: fontSize + " font-black uppercase" },
   { text: "500 ₽", type: "#premium-purple", textColor: "#af2eda", style: fontSize + " font-black uppercase" },
   {
-    text: "+5 К \nКРИПТО\nДЕПУ",
+    text: "+5% к\nпополнению\nбаланса",
     textColor: "#e99d0c",
     type: "#premium-gold",
-    style: fontSize_small + "font-black leading-tight uppercase",
+    style: "font-black leading-tight uppercase",
     multiline: true,
+    accents: [
+      {"fontSize": "30px", "spacing": "-0.5em"},
+      {"fontSize": "16px", "spacing": "1.25em"},
+      {"fontSize": "16px", "spacing": "1em"}
+    ]
   },
   {
     text: "ПРОМО\nКОД",
     y: 10,
     textColor: "#50158d",
     type: "#premium-purple-2",
-    style: fontSize + " font-black uppercase leading-none",
+    style: "font-black uppercase leading-none",
     multiline: true,
+    accents: [
+      {"fontSize": fontSize_big, "spacing": "-0.5em"},
+      {"fontSize": fontSize_big, "spacing": "1em"},
+    ]
   },
   { text: "50 ₽", type: "#premium-gold", textColor: "#e99d0c", style: fontSize_big + " font-black uppercase" },
   {
@@ -211,8 +220,9 @@ const getTextTransform = (index) => {
                       v-for="(line, lineIndex) in segment.text.split('\n')"
                       :key="lineIndex"
                       x="0"
-                      :dy="lineIndex === 0 ? '-0.5em' : '1em'"
-                    >
+                      :dy="segment.accents[lineIndex]['spacing']"
+                      :font-size="segment.accents[lineIndex]['fontSize']"
+                      >
                       {{ line }}
                     </tspan>
                   </template>
