@@ -52,39 +52,43 @@ const triggerShine = () => {
 
 .btn-content {
   position: relative;
-  background: linear-gradient(180deg, #9c52cc 0%, #8840bc 100%);
+  /* Градиент как на фото: от светло-оранжевого к насыщенному */
+  background: linear-gradient(180deg, #FFB31F 0%, #FF8A00 100%);
   border-radius: 100px;
-  padding: 0 60px;
+  padding: 15px 45px; /* Уменьшил padding для пропорций как на фото */
   overflow: hidden; 
+  /* Нижняя "объемная" тень и внутренний блик сверху */
   box-shadow: 
-    0 6px 0 #860fa3, 
-    0 12px 20px rgba(0, 0, 0, 0.2), 
-    inset 0 2px 3px rgba(255, 255, 255, 0.4);
+    0 6px 0 #D36B00, 
+    0 8px 15px rgba(0, 0, 0, 0.3), 
+    inset 0 2px 2px rgba(255, 255, 255, 0.5);
   transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .btn-text {
   font-family: 'Montserrat', sans-serif;
   font-weight: 900;
-  font-size: 80px;
-  color: #fffaf0;
+  font-size: 32px; /* Оптимальный размер для кнопки */
+  color: #FFFFFF;
   text-transform: uppercase;
   position: relative;
   z-index: 2;
   display: block;
-  text-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
+  /* Легкая тень текста для читаемости */
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  letter-spacing: 0.5px;
 }
 
 .spin-btn:hover .btn-content {
-  filter: brightness(1.1);
+  filter: brightness(1.05);
 }
 
 .spin-btn:active .btn-content {
-  transform: translateY(6px); 
+  transform: translateY(4px); /* Смещение вниз при нажатии */
   box-shadow: 
-    0 0 0 #860fa3, 
+    0 2px 0 #D36B00, 
     0 2px 4px rgba(0, 0, 0, 0.2),
-    inset 0 3px 5px rgba(0, 0, 0, 0.2);
+    inset 0 2px 4px rgba(0, 0, 0, 0.1);
   transition: all 0.05s ease; 
 }
 
@@ -92,30 +96,25 @@ const triggerShine = () => {
 .shine {
   position: absolute;
   top: 0;
-  left: -100%; /* Начальная позиция за пределами кнопки */
-  width: 50%;
+  left: -100%;
+  width: 40%;
   height: 100%;
   background: linear-gradient(
     to right,
     rgba(255, 255, 255, 0) 0%,
-    rgba(255, 255, 255, 0.4) 50%,
+    rgba(255, 255, 255, 0.6) 50%,
     rgba(255, 255, 255, 0) 100%
   );
-  transform: skewX(-20deg);
+  transform: skewX(-25deg);
   z-index: 1;
 }
 
-/* Класс, который запускает анимацию */
 .animate-shine {
-  animation: shine-sweep 1.4s ease-in-out;
+  animation: shine-sweep 1.2s ease-in-out;
 }
 
 @keyframes shine-sweep {
-  0% {
-    left: -100%;
-  }
-  100% {
-    left: 150%;
-  }
+  0% { left: -100%; }
+  100% { left: 150%; }
 }
 </style>

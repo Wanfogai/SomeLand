@@ -1,6 +1,9 @@
-<script setup>
-import { ref, computed } from "vue";
+<script setup lang="ts">
+import { ref } from "vue";
+import { useModalStore } from "../modalStore";
+import ModalWindow from "./ModalWindow.vue";
 
+const modalStore = useModalStore();
 import ShinyButton from "./ShinyButton.vue";
 
 const imgCenterBase64 = ref(
@@ -11,37 +14,26 @@ const imgCarouselBase64 = ref(
 );
 
 // Состояние вращения
+// Состояние вращения
 const rotation = ref(0);
 const isSpinning = ref(false);
-
 const spinDuration = 5000;
-// Функция для запуска вращения (например, на 2000 градусов)
-const spin = () => {
-  if (isSpinning.value) return;
-  isSpinning.value = true;
 
-  // 1. Рассчитываем случайный сектор (для примера)
-  // Чтобы колесо всегда крутилось вперед, добавляем много оборотов (например 5 * 360)
-  const extraSpins = 360 * 8;
-  const randomOffset = Math.floor(Math.random() * 360);
-  const targetRotation = rotation.value + extraSpins + randomOffset;
+const size = 450;
+const center = size + 20; // 470
+const radius = 240;
+const innerRadius = 80;
 
-  // 2. Запускаем вращение
-  rotation.value = targetRotation;
-
-  // 4. Сброс флага после окончания
-  setTimeout(() => {
-    isSpinning.value = false;
-  }, spinDuration);
-};
+const fontSize_big = "text-[32px] ";
+const fontSize_NoStyle = "32px ";
 
 
-const fontSize_big = "32px";
-const fontSize = "text-[32px] ";
-const fontSize_small = "text-[16px] ";
+const spinCount = ref(0);
+
+// Данные секторов
 const segments = [
-  { text: "МЕРЧ", type: "#premium-gold", textColor: "#e99d0c", style: fontSize + " font-black uppercase" },
-  { text: "500 ₽", type: "#premium-purple", textColor: "#af2eda", style: fontSize + " font-black uppercase" },
+  { text: "МЕРЧ", type: "#premium-gold", textColor: "#e99d0c", style: fontSize_big + " font-black uppercase" },
+  { text: "500 ₽", type: "#premium-purple", textColor: "#af2eda", style: fontSize_big + " font-black uppercase" },
   {
     text: "+5% к\nпополнению\nбаланса",
     textColor: "#e99d0c",
@@ -49,9 +41,9 @@ const segments = [
     style: "font-black leading-tight uppercase",
     multiline: true,
     accents: [
-      {"fontSize": "30px", "spacing": "-0.5em"},
-      {"fontSize": "16px", "spacing": "1.25em"},
-      {"fontSize": "16px", "spacing": "1em"}
+      { fontSize: "30px", spacing: "-0.5em" },
+      { fontSize: "16px", spacing: "1.25em" },
+      { fontSize: "16px", spacing: "1em" }
     ]
   },
   {
@@ -62,8 +54,8 @@ const segments = [
     style: "font-black uppercase leading-none",
     multiline: true,
     accents: [
-      {"fontSize": fontSize_big, "spacing": "-0.5em"},
-      {"fontSize": fontSize_big, "spacing": "1em"},
+      { fontSize: fontSize_NoStyle, spacing: "-0.5em" },
+      { fontSize: fontSize_NoStyle, spacing: "1em" },
     ]
   },
   { text: "50 ₽", type: "#premium-gold", textColor: "#e99d0c", style: fontSize_big + " font-black uppercase" },
@@ -71,25 +63,74 @@ const segments = [
     text: "77 FS",
     textColor: "#9010cd",
     type: "#premium-purple",
-    style: fontSize + " font-black  uppercase",
+    style: fontSize_big + " font-black uppercase",
   },
 ];
 
-const size = 450;
-const center = size + 20;
-const radius = 240;
-const innerRadius = 80;
 const totalSegments = segments.length;
 const anglePerSegment = 360 / totalSegments;
 
-// Исправленные координаты (убраны лишние смещения +188 и +11)
-const getCoordinatesForPercent = (percent, r) => {
+// --- ЛОГИКА ВРАЩЕНИЯ ---
+const spin = () => {
+  if (isSpinning.value) return;
+  isSpinning.value = true;
+
+  // 1. Определяем победителя
+  const winningIndex = spinCount.value<=0?3:2;
+  if(spinCount.value==0)spinCount.value++;
+
+  console.log(`Цель: индекс ${winningIndex} ("${segments[winningIndex]!.text}")`);
+
+  // 2. Расчет координат
+  // a) Где мы находимся сейчас визуально (в пределах одного круга 0-360)
+  const currentVisualAngle = rotation.value % 360;
+
+  // b) Рассчитываем, где должен оказаться нужный сектор (визуальная точка 0-360)
+  // (360 - угол сектора) - это сдвиг, чтобы сектор встал на 12 часов.
+  // anglePerSegment / 2 - это центровка сектора.
+  const segmentBaseAngle = winningIndex * anglePerSegment;
+  const centerOffset = anglePerSegment / 2; 
+  
+  // Целевая точка на круге (куда должна смотреть стрелка)
+  let targetVisualAngle = (360 - segmentBaseAngle - centerOffset);
+  
+  // Нормализуем, чтобы не уйти в минус или больше 360 при джиттере
+  targetVisualAngle = (targetVisualAngle + 360) % 360+30;
+
+  // c) Считаем дистанцию, которую нужно прокрутить (Delta)
+  let delta = targetVisualAngle - currentVisualAngle;
+
+  // Если цель "сзади" (delta < 0), добавляем 360, чтобы прокрутить вперед до неё
+  if (delta < 0) {
+    delta += 360;
+  }
+
+  // 3. Добавляем обороты для зрелищности (например, 5 полных оборотов + расстояние до цели)
+  const extraSpins = 5 * 360;
+  
+  // 4. Прибавляем к ТЕКУЩЕМУ накопленному значению
+  rotation.value += extraSpins + delta;
+
+  setTimeout(() => {
+    isSpinning.value = false;
+    if(spinCount.value<=1)modalStore.openModal();
+    
+    if(spinCount.value>1)setTimeout(()=>modalStore.RedirectToDragon(),550)
+    spinCount.value++;
+    
+    console.log("Выпало:", segments[winningIndex]!.text);
+  }, spinDuration);
+};
+
+// --- ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ SVG ---
+
+const getCoordinatesForPercent = (percent:any, r:any) => {
   const x = center + r * Math.cos(2 * Math.PI * percent);
   const y = center + r * Math.sin(2 * Math.PI * percent);
   return [x, y];
 };
 
-const getSlicePath = (index) => {
+const getSlicePath = (index:any) => {
   const startAngle = index * anglePerSegment - 90 - anglePerSegment / 2;
   const endAngle = startAngle + anglePerSegment;
   const startPercent = startAngle / 360;
@@ -97,14 +138,8 @@ const getSlicePath = (index) => {
 
   const [startX, startY] = getCoordinatesForPercent(startPercent, radius);
   const [endX, endY] = getCoordinatesForPercent(endPercent, radius);
-  const [innerStartX, innerStartY] = getCoordinatesForPercent(
-    startPercent,
-    innerRadius,
-  );
-  const [innerEndX, innerEndY] = getCoordinatesForPercent(
-    endPercent,
-    innerRadius,
-  );
+  const [innerStartX, innerStartY] = getCoordinatesForPercent(startPercent, innerRadius);
+  const [innerEndX, innerEndY] = getCoordinatesForPercent(endPercent, innerRadius);
 
   const largeArcFlag = anglePerSegment > 180 ? 1 : 0;
 
@@ -117,7 +152,7 @@ const getSlicePath = (index) => {
   `;
 };
 
-const getTextTransform = (index) => {
+const getTextTransform = (index:any) => {
   const angle = index * anglePerSegment - 90;
   const rotation = angle + 90;
   const textRadius = (radius + innerRadius) / 2;
@@ -132,12 +167,12 @@ const getTextTransform = (index) => {
     <span>от дракона</span>    
   </div>
   <div class="absolute top-1/2 z-[9999]">
-    <ShinyButton @click="spin"></ShinyButton>
+    <ShinyButton @click="spin()">Крутить</ShinyButton>
   </div>
   <div
     class="fixed inset-0 w-screen h-screen overflow-hidden flex flex-col items-center justify-center z-999"
   >
-    <div class="relative w-full h-full flex items-center justify-center p-4">
+    <div class="fixed  w-full h-full flex items-center justify-center p-4">
       <svg
         :viewBox="`0 200 ${size} ${size}`"
         class="w-full h-full max-w-[600px] max-h-[600px]"
@@ -220,8 +255,8 @@ const getTextTransform = (index) => {
                       v-for="(line, lineIndex) in segment.text.split('\n')"
                       :key="lineIndex"
                       x="0"
-                      :dy="segment.accents[lineIndex]['spacing']"
-                      :font-size="segment.accents[lineIndex]['fontSize']"
+                      :dy="segment.accents[lineIndex]!['spacing']"
+                      :font-size="segment.accents[lineIndex]!['fontSize']"
                       >
                       {{ line }}
                     </tspan>
@@ -261,6 +296,7 @@ const getTextTransform = (index) => {
         />
       </svg>
     </div>
+    <ModalWindow />
   </div>
 </template>
 
