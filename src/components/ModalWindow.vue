@@ -21,11 +21,21 @@ const store = useModalStore();
             &times;
           </button>
 
-        <div class="w-[50%] h-[20%] modal-content flex flex-col justify-center items-center">
-         <div class="flex w-full items-center justify-center mb-[40px]"><span class=" monser text-[40px] font-bold text-white">Регистрируйся, вводи промокод <br> и получи бонус к первому депозиту</span></div>
+        <div class="w-[60%] h-[20%] modal-content flex flex-col justify-center items-center ">
+         <div class="flex w-full items-center justify-center mb-[40px] w-[120%] leading-tight">
+            <span class=" monser text-[24px] lg:text-[36px] font-bold text-white">
+              Регистрируйся, вводи промокод <br> и получи бонус к первому депозиту
+            </span>
+          </div>
           
-            <div class=" w-[80%] border-solid border-[5px] border-white rounded-[25px] px-[70px] py-[20px]"><span class="monser text-[80px] font-bold text-white">WINNES</span></div>
-          <div ><TakeButton @click="emit('click')">ЗАБРАТЬ БОНУС</TakeButton></div>
+            <div class="relative w-[120%] border-solid bg-gradient-to-b from-[#9c52cc] to-[#8840bc] border-white rounded-[25px] px-5 py-5
+            sm:w-[80%] md:w-[80%] lg:w-[50%]">
+              <span class="monser text-5xl sm:text-6xl md:text-[80px] font-bold text-white text-center block">
+                WINNES
+              </span>
+            </div>
+          <div >
+            <TakeButton @click="emit('click')">ЗАБРАТЬ БОНУС</TakeButton></div>
         </div>
       </div>
     </Transition>

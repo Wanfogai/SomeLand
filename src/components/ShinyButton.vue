@@ -34,9 +34,9 @@ const triggerShine = () => {
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@900&display=swap');
 
 .btn-wrapper {
-  padding: 50px;
+  padding-top: 50px;
   display: flex;
-  justify-content: center;
+  /* justify-content: center; */
 }
 
 .spin-btn {
@@ -54,7 +54,7 @@ const triggerShine = () => {
   position: relative;
   background: linear-gradient(180deg, #9c52cc 0%, #8840bc 100%);
   border-radius: 100px;
-  padding: 0 60px;
+  padding: 10px 60px;
   overflow: hidden; 
   box-shadow: 
     0 6px 0 #860fa3, 
@@ -66,7 +66,7 @@ const triggerShine = () => {
 .btn-text {
   font-family: 'Montserrat', sans-serif;
   font-weight: 900;
-  font-size: 80px;
+  font-size: 4em;
   color: #fffaf0;
   text-transform: uppercase;
   position: relative;
@@ -116,6 +116,12 @@ const triggerShine = () => {
   }
   100% {
     left: 150%;
+  }
+}
+
+@media(max-width: 768px){
+  .btn-text{
+    font-size: 3em;
   }
 }
 </style>

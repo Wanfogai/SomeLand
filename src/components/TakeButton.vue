@@ -31,8 +31,6 @@ const triggerShine = () => {
 </script>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@900&display=swap');
-
 .btn-wrapper {
   padding: 50px;
   display: flex;
@@ -40,6 +38,7 @@ const triggerShine = () => {
 }
 
 .spin-btn {
+  font-family: "Unbounded";
   background: none;
   border: none;
   padding: 0;
@@ -55,7 +54,7 @@ const triggerShine = () => {
   /* Градиент как на фото: от светло-оранжевого к насыщенному */
   background: linear-gradient(180deg, #FFB31F 0%, #FF8A00 100%);
   border-radius: 100px;
-  padding: 15px 45px; /* Уменьшил padding для пропорций как на фото */
+  padding: 15px 35px; /* Уменьшил padding для пропорций как на фото */
   overflow: hidden; 
   /* Нижняя "объемная" тень и внутренний блик сверху */
   box-shadow: 
@@ -66,9 +65,8 @@ const triggerShine = () => {
 }
 
 .btn-text {
-  font-family: 'Montserrat', sans-serif;
   font-weight: 900;
-  font-size: 32px; /* Оптимальный размер для кнопки */
+  font-size: 2em; /* Оптимальный размер для кнопки */
   color: #FFFFFF;
   text-transform: uppercase;
   position: relative;

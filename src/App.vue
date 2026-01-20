@@ -6,16 +6,17 @@ const logoImage = "data:image/webp;base64,UklGRmYIAABXRUJQVlA4WAoAAAAQAAAA8wAAXQ
 </script>
 
 <template>
-  <img :src="logoImage" alt="logo" class="absolute top-[100px] left-[90px] w-[150px]">
-  <!-- <div class="h-[89%] w-[89%] absolute z-[9999] right-1 pointer-events-none"><img src="/public/images/Group22.webp" alt="" ></div> -->
+  <img :src="logoImage" alt="logo" class="absolute drop-shadow z-[3000] top-[95%] left-[10px] w-[15%]
+  md:top-[100px] md:left-[90px] md:w-[150px] sm:top-[92%]
+                                                    ">
   <div class="coin1-overlay"></div>
   <div class="coin2-overlay"></div>
   <div class="coin3-overlay"></div>
   <div >
-    
     <FortuneWheel 
     />
     
   </div>
+  
   
 </template>
