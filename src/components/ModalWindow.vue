@@ -3,6 +3,8 @@ import { useModalStore } from '../modalStore';
 import ShinyButton from './ShinyButton.vue';
 import TakeButton from './TakeButton.vue';
 
+const emit = defineEmits(['click']);
+
 const store = useModalStore();
 </script>
 
@@ -12,10 +14,10 @@ const store = useModalStore();
       <div 
         v-if="store.isOpen" 
         class="modal-backdrop w-full" 
-        @click.self="store.closeModal"
+        @click.self="()=>{store.closeModal;emit('click')}"
       >
 
-       <button class="close-btn absolute top-2 right-2 items-center justify-center"  @click="store.closeModal">
+       <button class="close-btn absolute top-2 right-2 items-center justify-center"  @click="()=>{store.closeModal;emit('click')}">
             &times;
           </button>
 
@@ -23,7 +25,7 @@ const store = useModalStore();
          <div class="flex w-full items-center justify-center mb-[40px]"><span class=" monser text-[40px] font-bold text-white">Регистрируйся, вводи промокод <br> и получи бонус к первому депозиту</span></div>
           
             <div class=" w-[80%] border-solid border-[5px] border-white rounded-[25px] px-[70px] py-[20px]"><span class="monser text-[80px] font-bold text-white">WINNES</span></div>
-          <div ><TakeButton @click="store.RedirectToDragon">ЗАБРАТЬ БОНУС</TakeButton></div>
+          <div ><TakeButton @click="emit('click')">ЗАБРАТЬ БОНУС</TakeButton></div>
         </div>
       </div>
     </Transition>
@@ -38,7 +40,7 @@ const store = useModalStore();
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.7); 
+  background-color: rgba(0, 0, 0, 0.8); 
   display: flex;
   justify-content: center;
   align-items: center;

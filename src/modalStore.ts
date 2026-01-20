@@ -19,6 +19,7 @@ export const useModalStore = defineStore("modal", () => {
     // Обязательно очищаем таймер при закрытии, чтобы он не сработал позже
     if (timerId.value) {
       clearTimeout(timerId.value);
+      
       timerId.value = null;
     }
   };
@@ -31,13 +32,12 @@ export const useModalStore = defineStore("modal", () => {
     isOpen.value = true;
 
     // Запускаем таймер на 5 секунд (5000 мс)
-    timerId.value = setTimeout(() => {
-      closeModal();
-    }, 5000);
+    
   };
 
   return {
     isOpen,
+    timerId,
     openModal,
     closeModal,
     RedirectToDragon,
